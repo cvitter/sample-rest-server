@@ -3,7 +3,7 @@
 	<groupId>com.vitter</groupId>
 	<artifactId>sample-rest-server</artifactId>
 	<version>0.0.1</version>
-	<name>Sample Rest Server - Example</name>
+	<name>Sample Rest Server</name>
 
 	<build>
 		<plugins>

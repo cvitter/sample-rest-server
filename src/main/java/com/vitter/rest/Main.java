@@ -4,6 +4,7 @@ import static spark.Spark.*;
 
 public class Main {
 	
+	// Unused variables to trigger PMD warnings
 	private String blahBlahBlah = "Some blah blah blah!";
 	private int one = 1;
 	
