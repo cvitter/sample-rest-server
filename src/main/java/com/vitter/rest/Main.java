@@ -4,6 +4,10 @@ import static spark.Spark.*;
 
 public class Main {
 	
+	private String blahBlahBlah = "Some blah blah blah!";
+	private int one = 1;
+	
+	
 	public static void main(String[] args) {
 		//
 		System.out.println("Starting our simple rest server...");
