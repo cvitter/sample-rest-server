@@ -25,6 +25,9 @@ pipeline {
 		stage('Post Build') {
 			steps {
 				echo 'Stage: Post Build'
+				
+				pmd
+				
 				// - junit publishes our test re
 				junit 'target/surefire-reports/*.xml'
 				
