@@ -14,5 +14,11 @@ pipeline {
 				sh 'mvn package site'
 			}
 		}
+		stage('Post Build') {
+			steps {
+				echo 'Stage: Post Build'
+				junit 'target/surefire-reports/*.xml'
+			}
+		}
     }
 }
