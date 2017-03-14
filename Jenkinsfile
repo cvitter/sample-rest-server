@@ -27,7 +27,7 @@ pipeline {
 				echo 'Stage: Post Build'
 				
 				//
-				step([$class: 'PmdPublisher', pattern: '**/target/pmd.xml', unstableTotalAll:'0'])
+				step([$class: 'PmdPublisher', pattern: '**/target/pmd.xml'])
 				
 				// - junit publishes our test re
 				junit 'target/surefire-reports/*.xml'
