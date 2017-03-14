@@ -2,13 +2,17 @@ pipeline {
     agent any
 
 	stages {
-		stage('checkout') {
+		stage('Checkout') {
 			steps {
 				echo 'Stage: Checkout'
+				git 'https://github.com/cvitter/sample-rest-server'
+			}
+		}
+		stage('Build') {
+			steps {
+				echo 'Stage: Build'
 				
-				checkout([$class: 'GitSCM', branches: [[name: '*/master']], 
-					doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], 
-					userRemoteConfigs: [[url: 'https://github.com/cvitter/sample-rest-server']]])
+				
 			}
 		}
     }
