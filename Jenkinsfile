@@ -11,8 +11,7 @@ pipeline {
 		stage('Build') {
 			steps {
 				echo 'Stage: Build'
-				
-				
+				sh 'mvn package site'
 			}
 		}
     }
