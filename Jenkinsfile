@@ -1,6 +1,6 @@
 pipeline {
-	//
-    //agent any
+	// Specify the agent to use in execution of the pipeline
+    agent any
 
 	stages {
 		
