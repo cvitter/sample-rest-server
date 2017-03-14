@@ -18,6 +18,7 @@ pipeline {
 			steps {
 				echo 'Stage: Post Build'
 				junit 'target/surefire-reports/*.xml'
+				archiveArtifacts 'target/*.jar'
 			}
 		}
     }
