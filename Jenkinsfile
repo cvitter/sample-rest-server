@@ -27,9 +27,9 @@ pipeline {
 				echo 'Stage: Post Build'
 				
 				// Publish PMD analysis
-				step([$class: 'PmdPublisher', pattern: '**/target/pmd.xml'])
+				step([$class: 'PmdPublisher', pattern: 'target/pmd.xml'])
 				
-				// - junit publishes our test re
+				// Publish Junit test reports
 				junit 'target/surefire-reports/*.xml'
 				
 				// Archives the jar uber jar file we created
