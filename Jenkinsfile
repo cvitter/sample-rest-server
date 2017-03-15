@@ -17,7 +17,7 @@ pipeline {
 	
 		stage('Start Up') {
 			steps {
-				sh 'printenv'
+				sh 'Docker Image Name: $DOCKER_IMG_NAME'
 			}
 		}
 	
@@ -33,7 +33,7 @@ pipeline {
 				//   - package flag builds our jars and runs unit tests
 				//   - site flag runs PMD and builds our static analysis report
 				timeout(time: 5, unit: 'MINUTES') {
-                	sh './slow-process.sh'
+                	sh 'mvn package site'
                 }
 			}
 			post {
