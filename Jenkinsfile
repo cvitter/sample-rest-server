@@ -50,12 +50,11 @@ pipeline {
 			}
 		}
 		
-		postBuild {
-			always {
-				// Archives the jar uber jar file we created
-				archiveArtifacts 'target/*with-dependencies.jar	'
-			}
-		}
-		
     }
+    postBuild {
+		always {
+			// Archives the jar uber jar file we created
+			archiveArtifacts 'target/*with-dependencies.jar	'
+		}
+	}
 }
