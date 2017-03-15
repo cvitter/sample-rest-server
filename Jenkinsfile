@@ -45,7 +45,7 @@ pipeline {
 			steps {
 				echo 'Stage: Build Docker Image'
 				
-				echo
+				echo "${DOCKER_IMG_NAME}"
 			}
 		}
     }
