@@ -1,6 +1,10 @@
 pipeline {
 	// Specify the agent to use in execution of the pipeline
     agent any
+    
+    parameters {
+        string(name: 'DOCKER_IMG_NAME', defaultValue: 'rest-server:${POM_VERSION}')
+    }
 
 	stages {
 		
@@ -39,7 +43,7 @@ pipeline {
 		
 		stage('Build Docker Image') {
 			steps {
-				DOCKER_IMG_NAME = "rest-server:${POM_VERSION}"
+				echo "Docker Image: ${DOCKER_IMG_NAME}"
 			}
 		}
     }
