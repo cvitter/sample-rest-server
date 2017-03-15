@@ -36,5 +36,11 @@ pipeline {
 				archiveArtifacts 'target/*with-dependencies.jar	'
 			}
 		}
+		
+		stage('Build Docker Image') {
+			steps {
+				DOCKER_IMG_NAME = "rest-server:${POM_VERSION}"
+			}
+		}
     }
 }
