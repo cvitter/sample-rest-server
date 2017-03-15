@@ -17,7 +17,7 @@ pipeline {
 	
 		stage('Start Up') {
 			steps {
-				sh 'Docker Image Name: $DOCKER_IMG_NAME'
+				echo 'Docker Image Name: $DOCKER_IMG_NAME'
 			}
 		}
 	
