@@ -2,23 +2,24 @@ pipeline {
 	// Specify the agent to use in execution of the pipeline
     agent any
     
+    //
     environment { 
-        DOCKER_IMG_NAME="demo-app:0.0.1"
+        DOCKER_IMG_NAME = "demo-app:0.0.1"
     }
 
 	stages {
 		
-		stage('Checkout') {
+		stage('Checkout Code') {
 			steps {
-				echo 'Stage: Checkout'
+				echo 'Stage: Checkout Cod'
 				// Checkout our code from Github
 				git 'https://github.com/cvitter/sample-rest-server'
 			}
 		}
 		
-		stage('Build') {
+		stage('Building') {
 			steps {
-				echo 'Stage: Build'
+				echo 'Stage: Building'
 				// Build our code using Maven from the command line
 				//   - package flag builds our jars and runs unit tests
 				//   - site flag runs PMD and builds our static analysis report
@@ -26,9 +27,9 @@ pipeline {
 			}
 		}
 		 
-		stage('Post Build') {
+		stage('Publish Reports') {
 			steps {
-				echo 'Stage: Post Build'
+				echo 'Stage: Publish Reports'
 				
 				// Publish PMD analysis
 				step([$class: 'PmdPublisher', pattern: 'target/pmd.xml'])
@@ -45,8 +46,16 @@ pipeline {
 			steps {
 				echo 'Stage: Build Docker Image'
 				
-				echo "${DOCKER_IMG_NAME}"
+				echo "Docker Image Name: ${DOCKER_IMG_NAME}"
 			}
 		}
+		
+		postBuild {
+			always {
+				// Archives the jar uber jar file we created
+				archiveArtifacts 'target/*with-dependencies.jar	'
+			}
+		}
+		
     }
 }
