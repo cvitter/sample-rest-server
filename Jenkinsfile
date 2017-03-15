@@ -3,7 +3,7 @@ pipeline {
     agent any
     
     environment { 
-        DOCKER_IMG_NAME="demo-app:${POM_VERSION}"
+        DOCKER_IMG_NAME="demo-app:0.0.1"
     }
 
 	stages {
