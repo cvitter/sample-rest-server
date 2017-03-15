@@ -6,21 +6,17 @@ pipeline {
     environment { 
         DOCKER_IMG_NAME = "demo-app:0.0.1"
     }
+    
+    options {
+    	// Keep the 10 most recent builds
+    	buildDiscarder(logRotator(numToKeepStr:'10')) 
+  	}
 
 	stages {
 	
-		stage ('Initialize') {
-        	steps {
-                sh '''
-                    echo "PATH = ${PATH}"
-                    echo "M2_HOME = ${M2_HOME}"
-                '''
-            }
-        }
-		
 		stage('Checkout Code') {
 			steps {
-				echo 'Stage: Checkout Cod'
+				echo 'Stage: Checkout Code'
 				// Checkout our code from Github
 				git 'https://github.com/cvitter/sample-rest-server'
 			}
@@ -33,6 +29,12 @@ pipeline {
 				//   - package flag builds our jars and runs unit tests
 				//   - site flag runs PMD and builds our static analysis report
 				sh 'mvn package site'
+			}
+			post {
+				success {
+					// Archives the jar uber jar file we created
+					archiveArtifacts 'target/*with-dependencies.jar	'
+				}
 			}
 		}
 		 
@@ -60,10 +62,5 @@ pipeline {
 		}
 		
     }
-    post {
-		always {
-			// Archives the jar uber jar file we created
-			archiveArtifacts 'target/*with-dependencies.jar	'
-		}
-	}
+
 }
