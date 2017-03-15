@@ -51,7 +51,7 @@ pipeline {
 		}
 		
     }
-    postBuild {
+    post {
 		always {
 			// Archives the jar uber jar file we created
 			archiveArtifacts 'target/*with-dependencies.jar	'
