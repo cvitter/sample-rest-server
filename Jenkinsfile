@@ -47,10 +47,10 @@ pipeline {
 					archiveArtifacts 'target/*with-dependencies.jar	'
 					
 					// Publish PMD analysis
-					step([$class: 'PmdPublisher', pattern: 'target/pmd.xml'])
+					// step([$class: 'PmdPublisher', pattern: 'target/pmd.xml'])
 				
 					// Publish Junit test reports
-					junit 'target/surefire-reports/*.xml'
+					// junit 'target/surefire-reports/*.xml'
 				}
 			}
 		}
