@@ -1,6 +1,11 @@
 pipeline {
 	// Specify the agent to use in execution of the pipeline
     agent any
+    
+    tools {
+        maven 'Maven3'
+        jdk 'Java8'
+    }
 
 	// 
     environment { 
@@ -17,7 +22,7 @@ pipeline {
 	
 		stage('Start Up') {
 			steps {
-				echo 'Docker Image Name: $DOCKER_IMG_NAME'
+				echo 'Start Up!'
 			}
 		}
 	
