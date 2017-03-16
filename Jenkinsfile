@@ -50,7 +50,7 @@ pipeline {
 					// step([$class: 'PmdPublisher', pattern: 'target/pmd.xml'])
 				
 					// Publish Junit test reports
-					// junit 'target/surefire-reports/*.xml'
+					junit 'target/surefire-reports/*.xml'
 				}
 			}
 		}
