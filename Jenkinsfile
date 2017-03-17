@@ -5,6 +5,7 @@ pipeline {
     tools {
         maven 'Maven3'
         jdk 'Java8'
+        docker 'Docker'
     }
 
 	// 
@@ -59,6 +60,7 @@ pipeline {
 		stage('Build Docker Image') {
 			steps {
 				echo "Docker Image Name: ${DOCKER_IMG_NAME}"
+				sh 'docker -info'
 			}
 		}
 		
