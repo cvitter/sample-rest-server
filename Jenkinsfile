@@ -20,28 +20,19 @@ pipeline {
   	}
 
 	stages {
-	
-		stage('Start Up') {
-			steps {
-				echo 'Start Up!'
-			}
-		}
-	
-		stage('Checkout Code') {
-			steps {
-				git 'https://github.com/cvitter/sample-rest-server'
-			}
-		}
-		
+
 		stage('Building') {
 			steps {
 				// Build our code using Maven from the command line
 				//   - package flag builds our jars and runs unit tests
 				//   - site flag runs PMD and builds our static analysis report
-				timeout(time: 5, unit: 'MINUTES') {
-                	sh 'mvn package site'
-                }
-			}
+			    
+			    withEnv(['env.PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin']) {
+ 					sh 'mvn package site'
+				}
+			    
+			    
+            }
 			post {
 				success {
 					// Archives the jar uber jar file we created
