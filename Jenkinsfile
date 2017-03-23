@@ -38,8 +38,8 @@ pipeline {
 		
 		stage('Build Docker Image') {
 			steps {
-				echo "Docker Image Name: ${DOCKER_IMG_NAME}"
-				//sh 'docker -info'
+				//echo "Docker Image Name: ${DOCKER_IMG_NAME}"
+				sh 'docker -info'
 			}
 		}
 		
