@@ -29,7 +29,7 @@ pipeline {
 			    
 			    echo 'env.PATH=' + env.PATH
 			    
-			    withEnv(["PATH=/bin:/usr/bin"]) {
+			    withEnv(["PATH=/bin:/usr/bin/java/bin:/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin"]) {
  					
  					echo 'AFTER env.PATH=' + env.PATH
  					
