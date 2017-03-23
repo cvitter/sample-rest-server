@@ -13,7 +13,7 @@ pipeline {
 		stage('Building') {
 			steps {
 			    
-			    #withEnv(["PATH=/bin:/usr/bin/:/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin"]) {
+			    //withEnv(["PATH=/bin:/usr/bin/:/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin"]) {
  				withEnv(["PATH=/bin:/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"]) {
  					echo 'AFTER env.PATH=' + env.PATH
  					sh 'mvn package site'
