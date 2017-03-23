@@ -3,10 +3,10 @@ pipeline {
     // agent any
     agent { label 'swarm' }
     
-    tools {
+    //tools {
     	//jdk 'Agent_JDK'
         //maven 'Maven3'
-    }
+    //}
 
 	// 
     environment { 
