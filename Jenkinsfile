@@ -29,7 +29,7 @@ pipeline {
 			    
 			    echo 'env.PATH=' + env.PATH
 			    
-			    withEnv(["env.PATH=/bin:/usr/bin"]) {
+			    withEnv(["PATH=/bin:/usr/bin"]) {
  					
  					echo 'AFTER env.PATH=' + env.PATH
  					
