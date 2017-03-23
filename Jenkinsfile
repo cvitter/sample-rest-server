@@ -3,17 +3,6 @@ pipeline {
     // agent any
     agent { label 'swarm' }
     
-    //tools {
-    	//jdk 'Agent_JDK'
-        //maven 'Maven3'
-    //}
-
-	// 
-    environment { 
-        DOCKER_IMG_NAME = "demo-app:0.0.1"
-    }
-    
-    // 
     options {
     	// Keep the 10 most recent builds
     	buildDiscarder(logRotator(numToKeepStr:'10')) 
@@ -23,16 +12,10 @@ pipeline {
 
 		stage('Building') {
 			steps {
-				// Build our code using Maven from the command line
-				//   - package flag builds our jars and runs unit tests
-				//   - site flag runs PMD and builds our static analysis report
 			    
-			    echo 'env.PATH=' + env.PATH
-			    
-			    withEnv(["PATH=/bin:/usr/bin/:/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin"]) {
- 					
+			    #withEnv(["PATH=/bin:/usr/bin/:/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin"]) {
+ 				withEnv(["PATH=/bin:/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"]) {
  					echo 'AFTER env.PATH=' + env.PATH
- 					
  					sh 'mvn package site'
 				}
 			    
