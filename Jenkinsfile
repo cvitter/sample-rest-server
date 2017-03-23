@@ -30,6 +30,9 @@ pipeline {
 			    echo 'env.PATH=' + env.PATH
 			    
 			    withEnv(['env.PATH=/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin']) {
+ 					
+ 					echo 'AFTER env.PATH=' + env.PATH
+ 					
  					sh 'mvn package site'
 				}
 			    
