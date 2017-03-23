@@ -4,8 +4,8 @@ pipeline {
     agent { label 'swarm' }
     
     tools {
-    	jdk 'Agent_JDK'
-        maven 'Maven3'
+    	//jdk 'Agent_JDK'
+        //maven 'Maven3'
     }
 
 	// 
