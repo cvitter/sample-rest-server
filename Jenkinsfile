@@ -5,7 +5,7 @@ pipeline {
     
     tools {
     	jdk 'Agent_JDK'
-        //maven 'Maven3'
+        maven 'Maven3'
     }
 
 	// 
