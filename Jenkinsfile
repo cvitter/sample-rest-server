@@ -1,6 +1,7 @@
 pipeline {
 	// Specify the agent to use in execution of the pipeline
-    agent any
+    // agent any
+    agent { label 'swarm' }
     
     tools {
     	jdk 'Agent_JDK'
