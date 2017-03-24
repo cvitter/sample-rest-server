@@ -26,6 +26,13 @@ pipeline {
             steps {
                 sh 'mvn package site'
             }
+            
+            when {
+                expression { params.BUILD_GOALS == 'clean' }
+            }
+            steps {
+                sh 'mvn clean'
+            }
 
 			post {
 				success {
