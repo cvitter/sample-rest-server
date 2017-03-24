@@ -26,6 +26,21 @@ pipeline {
                 sh 'mvn clean'
             }
 		}
+		
+		stage('Building - Test') {
+            when {
+                expression { params.BUILD_GOALS == 'test' }
+            }
+            steps {
+                sh 'mvn test'
+            }
+            post {
+				success {
+					// Publish Junit test reports
+					junit 'target/surefire-reports/*.xml'
+				}
+			}
+		}
 
 		stage('Building - Package and Site') {
             when {
