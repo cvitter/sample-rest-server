@@ -17,23 +17,23 @@ pipeline {
   	}
 
 	stages {
-
-		stage('Building') {
-		
-            when {
-                expression { params.BUILD_GOALS == 'package site' }
-            }
-            steps {
-                sh 'mvn package site'
-            }
-            
+	
+		stage('Building - Clean') {
             when {
                 expression { params.BUILD_GOALS == 'clean' }
             }
             steps {
                 sh 'mvn clean'
             }
+		}
 
+		stage('Building - Package and Site') {
+            when {
+                expression { params.BUILD_GOALS == 'package site' }
+            }
+            steps {
+                sh 'mvn package site'
+            }
 			post {
 				success {
 					// Archives the jar uber jar file we created
