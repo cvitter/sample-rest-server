@@ -19,9 +19,13 @@ pipeline {
 	stages {
 
 		stage('Building') {
-			steps {
- 				sh "mvn ${params.Build-Goals}"
+			when {
+                arams.Greeting 'pacakge site'
             }
+            steps {
+                sh 'mvn package site'
+            }
+
 			post {
 				success {
 					// Archives the jar uber jar file we created
