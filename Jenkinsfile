@@ -20,7 +20,7 @@ pipeline {
 
 		stage('Building') {
 			when {
-                arams.Greeting 'pacakge site'
+                params.Greeting 'package site'
             }
             steps {
                 sh 'mvn package site'
