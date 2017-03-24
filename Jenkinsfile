@@ -19,12 +19,11 @@ pipeline {
 	stages {
 
 		stage('Building') {
-			when {
-                params.Greeting 'package site'
-            }
-            steps {
-                sh 'mvn package site'
-            }
+			if (params.Build-Goals == 'package site') {
+            	sh 'mvn package site'
+        	} else {
+            	echo 'Nothing to see here!'
+        	}
 
 			post {
 				success {
