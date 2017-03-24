@@ -1,9 +1,9 @@
 pipeline {
 	// Specify the agent to use in execution of the pipeline
-    agent { label 'swarm' } // Run on any agent with the 'swarm' label
+    agent { label 'swarm' }
     
     parameters {
-        string(name: 'Build-Goals', defaultValue: 'package site', description: 'Maven build goals/options')
+        string(name: 'Build-Goal', defaultValue: 'package site', description: 'Maven build goals/options')
     }
     
     environment {
@@ -20,7 +20,7 @@ pipeline {
 
 		stage('Building') {
 			steps {
- 				sh "mvn ${params.Build-Goals}"
+ 				sh 'mvn package site'
             }
 			post {
 				success {
