@@ -3,7 +3,7 @@ pipeline {
     agent { label 'swarm' }
     
     parameters {
-        string(name: 'Build-Goal', defaultValue: 'package site', description: 'Maven build goals/options')
+        string(name: 'Build-Goals', defaultValue: 'package site', description: 'Maven build goals/options')
     }
     
     environment {
@@ -20,7 +20,7 @@ pipeline {
 
 		stage('Building') {
 			steps {
- 				sh 'mvn package site'
+ 				sh "mvn ${params.Build-Goals}"
             }
 			post {
 				success {
