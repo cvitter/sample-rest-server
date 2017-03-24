@@ -13,10 +13,10 @@ pipeline {
             name: 'BUILD_GOALS')
     }
     
-    environment {
+    //environment {
     	// Update Jenkins with swarm agent path information to ensure sh and java execute at build time
-        PATH = '/bin:/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
-    }
+     //   PATH = '/bin:/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    //}
     
     options {
     	// Keep the 10 most recent builds
