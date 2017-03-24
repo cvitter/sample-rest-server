@@ -3,7 +3,14 @@ pipeline {
     agent { label 'swarm' }
     
     parameters {
-        string(name: 'BUILD_GOALS', defaultValue: 'package site', description: 'Maven build goals/options')
+        // string(name: 'BUILD_GOALS', defaultValue: 'package site', description: 'Maven build goals/options')
+        
+        choice(
+            // choices are a string of newline separated values
+            // https://issues.jenkins-ci.org/browse/JENKINS-41180
+            choices: 'Clean\nTest\nPackage\nSite\nAll',
+            description: 'Maven Build Options',
+            name: 'BUILD_GOALS')
     }
     
     environment {
@@ -18,18 +25,18 @@ pipeline {
 
 	stages {
 	
-		stage('Building - Clean') {
+		stage('Clean') {
             when {
-                expression { params.BUILD_GOALS == 'clean' }
+                expression { params.BUILD_GOALS == 'Clean' }
             }
             steps {
                 sh 'mvn clean'
             }
 		}
 		
-		stage('Building - Test') {
+		stage('Test') {
             when {
-                expression { params.BUILD_GOALS == 'test' }
+                expression { params.BUILD_GOALS == 'Test' }
             }
             steps {
                 sh 'mvn test'
@@ -42,12 +49,12 @@ pipeline {
 			}
 		}
 
-		stage('Building - Package and Site') {
+		stage('Package') {
             when {
-                expression { params.BUILD_GOALS == 'package site' }
+                expression { params.BUILD_GOALS == 'Package' }
             }
             steps {
-                sh 'mvn package site'
+                sh 'mvn package'
             }
 			post {
 				success {
@@ -55,10 +62,25 @@ pipeline {
 					archiveArtifacts 'target/*with-dependencies.jar'
 					
 					// Publish PMD analysis
-					step([$class: 'PmdPublisher', pattern: 'target/pmd.xml'])
+					//step([$class: 'PmdPublisher', pattern: 'target/pmd.xml'])
 				
 					// Publish Junit test reports
 					junit 'target/surefire-reports/*.xml'
+				}
+			}
+		}
+		
+		stage('Site') {
+            when {
+                expression { params.BUILD_GOALS == 'Site' }
+            }
+            steps {
+                sh 'mvn site'
+            }
+            post {
+				success {
+					// Publish PMD analysis
+					step([$class: 'PmdPublisher', pattern: 'target/pmd.xml'])
 				}
 			}
 		}
