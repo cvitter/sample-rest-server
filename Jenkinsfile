@@ -1,7 +1,15 @@
 pipeline {
 	// Specify the agent to use in execution of the pipeline
-    // agent any
-    agent { label 'swarm' }
+    agent { label 'swarm' } // Run on any agent with the 'swarm' label
+    
+    parameters {
+        string(name: 'Build-Goals', defaultValue: 'package site', description: 'Maven build goals/options')
+    }
+    
+    environment {
+    	// Update Jenkins with swarm agent path information to ensure sh and java execute at build time
+        PATH = '/bin:/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin'
+    }
     
     options {
     	// Keep the 10 most recent builds
@@ -12,14 +20,7 @@ pipeline {
 
 		stage('Building') {
 			steps {
-			    
-			    //withEnv(["PATH=/bin:/usr/bin/:/tools/hudson.tasks.Maven_MavenInstallation/Maven3/bin:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin:/usr/lib/jvm/java-1.8-openjdk/jre/bin:/usr/lib/jvm/java-1.8-openjdk/bin"]) {
- 				withEnv(["PATH=/bin:/usr/bin/:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin"]) {
- 					echo 'AFTER env.PATH=' + env.PATH
- 					sh 'mvn package site'
-				}
-			    
-			    
+ 				sh "mvn ${params.Build-Goals}"
             }
 			post {
 				success {
