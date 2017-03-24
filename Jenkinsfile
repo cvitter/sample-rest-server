@@ -3,7 +3,7 @@ pipeline {
     agent { label 'swarm' }
     
     parameters {
-        string(name: 'BUILD-GOALS', defaultValue: 'package site', description: 'Maven build goals/options')
+        string(name: 'BUILD_GOALS', defaultValue: 'package site', description: 'Maven build goals/options')
     }
     
     environment {
@@ -21,7 +21,7 @@ pipeline {
 		stage('Building') {
 		
             when {
-                expression { params.BUILD-GOALS == 'package site' }
+                expression { params.BUILD_GOALS == 'package site' }
             }
             steps {
                 sh 'mvn package site'
