@@ -1,6 +1,6 @@
 pipeline {
 
-	agent any
+	agent { label 'swarm' }
 	
 	tools {
    		jdk 'Agent_JDK'
