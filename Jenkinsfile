@@ -1,11 +1,11 @@
 pipeline {
 
-	agent { label 'swarm' }
+	agent any
 	
-	tools {
-   		jdk 'Agent_JDK'
-		maven 'Maven3'
-    }
+	//tools {
+   	//	jdk 'Agent_JDK'
+	//	maven 'Maven3'
+    //}
     
     options {
     	buildDiscarder(logRotator(numToKeepStr:'10'))   // Keep the 10 most recent builds 
