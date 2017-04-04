@@ -10,7 +10,7 @@ pipeline {
 	
 		stage('Build - Pull Request') {
 			when {
-				expression { (BRANCH_NAME.startsWith("PR") }
+				expression { (BRANCH_NAME.startsWith("PR")) }
             }
             steps {
                 sh 'mvn test'
