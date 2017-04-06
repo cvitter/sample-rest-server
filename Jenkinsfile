@@ -39,6 +39,15 @@ pipeline {
             }
 		}
 		
+		stage('Integration Tests') {
+			when {
+                branch 'integration'
+            }
+            steps {
+                echo 'Integration Tests'
+            }
+		}
+		
 		stage('Quality Analysis') {
 			when {
                 branch 'development'
