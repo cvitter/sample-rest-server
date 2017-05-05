@@ -28,8 +28,7 @@ pipeline {
 						echo 'Run integration tests here...'
 					},
 					"Sonar Scan" : {
-						echo "mvn sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
-						sh "mvn sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
+						sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.beedemo.net:9000 -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
 					}, failFast: true
 				)	
 			}
