@@ -1,10 +1,6 @@
 pipeline {
 
 	agent any
-	
-	tools {
-		maven 'Maven3'
-    }
     
     options {
     	buildDiscarder(logRotator(numToKeepStr:'10'))   // Keep the 10 most recent builds 
@@ -36,6 +32,15 @@ pipeline {
             }
             steps {
                 sh 'mvn clean package site'
+            }
+		}
+		
+		stage('Integration Tests') {
+			when {
+                branch 'integration'
+            }
+            steps {
+                echo 'Integration Tests'
             }
 		}
 		
