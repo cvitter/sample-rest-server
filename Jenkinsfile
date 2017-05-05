@@ -16,6 +16,9 @@ pipeline {
 		}
 		
 		stage('Quality Analysis') {
+		
+			// Import our Sonar credentials in the environment block
+			// See https://jenkins.io/doc/pipeline/tour/environment/#credentials-in-the-environment
 			environment {
 				SONAR = credentials('sonar')
 			}
@@ -34,6 +37,30 @@ pipeline {
 			}
 		}
 		
+		stage('Create Docker Image') {
+			when {
+				branch 'master'
+			}
+			steps {
+				sh 'docker -v'
+			}
+		}
+		
+    }
+    
+    post {
+    
+    	always {
+    		echo 'Always'
+    	}
+    	
+    	success {
+    		echo 'success'
+    	}
+    	
+    	failure {
+    		echo 'failure'
+    	}
     }
 
 }
