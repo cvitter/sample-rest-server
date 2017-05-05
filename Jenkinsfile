@@ -1,10 +1,6 @@
 pipeline {
 
 	agent any
-	
-	tools {
-		maven 'Maven3'
-    }
     
     options {
     	buildDiscarder(logRotator(numToKeepStr:'10'))   // Keep the 10 most recent builds 
@@ -14,7 +10,7 @@ pipeline {
 	
 		stage('Build - Pull Request') {
 			when {
-				expression { (BRANCH_NAME.startsWith("PR")) }
+				expression { (BRANCH_NAME.startsWith("pr-")) }
             }
             steps {
                 sh 'mvn test'
@@ -26,7 +22,7 @@ pipeline {
                 branch 'development'
             }
             steps {
-                sh 'mvn clean package site'
+                sh 'mvn package'
             }
 		}
 	
@@ -39,15 +35,23 @@ pipeline {
             }
 		}
 		
+		stage('Integration Tests') {
+			when {
+                branch 'integration'
+            }
+            steps {
+                echo 'Integration Tests'
+            }
+		}
+		
 		stage('Quality Analysis') {
 			when {
-                branch 'master'
+                branch 'development'
             }
             steps {
             	parallel (
                     "integrationTests" : {
-                        // sh 'mvn verify'
-                        echo 'Run integration tests here...'
+                        sh 'mvn verify'
                     },
                     "sonarAnalysis" : {
                         sh 'mvn sonar:sonar -Dsonar.host.url=https://sonarqube.com -Dsonar.organization=cvitter-github -Dsonar.login=58ebe76411b8bef9fe0730201f583109005c505d'
