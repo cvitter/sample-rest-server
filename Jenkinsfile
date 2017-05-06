@@ -52,6 +52,7 @@ pipeline {
 		
 		stage('Create Docker Image') {
 			environment {
+				DOCKERHUB = credentials('dockerhub')
 				DOCKER_IMG_NAME = "sample-rest-server:0.0.1"
 			}
 			//when {
@@ -60,7 +61,11 @@ pipeline {
 			steps {
 				sh 'docker -v'
 				
-				sh "docker build -t ${DOCKER_IMG_NAME} ./"
+				sh """
+					docker build -t ${DOCKER_IMG_NAME} ./
+					docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW
+					docker push craigcloudbees/${DOCKER_IMG_NAME}-
+				"""
 				
 			}
 		}
