@@ -3,15 +3,24 @@ pipeline {
 	agent any
     
     options {
-    	buildDiscarder(logRotator(numToKeepStr:'10'))   // Keep the 10 most recent builds 
+    	buildDiscarder(logRotator(numToKeepStr:'10'))   // Keep only the 10 most recent builds 
   	}
 
 	stages {
 	
 		stage('Build') {
 			steps {
-				sh 'mvn clean package site'
+				sh 'mvn clean package'
 				junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+			}
+		}
+		
+		stage('Create Site') {
+			when {
+				branch 'master'
+			}
+			steps {
+				sh 'mvn site:site'
 			}
 		}
 		
