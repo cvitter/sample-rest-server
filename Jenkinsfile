@@ -52,7 +52,7 @@ pipeline {
 		
 		stage('Create Docker Image') {
 			environment {
-				DOCKER_IMG_NAME = "sample-rest-server:${POM_VERSION}"
+				DOCKER_IMG_NAME = "sample-rest-server:0.0.1"
 			}
 			//when {
 			//	branch 'master'
