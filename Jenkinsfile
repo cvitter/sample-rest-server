@@ -5,6 +5,13 @@ pipeline {
     options {
     	buildDiscarder(logRotator(numToKeepStr:'10'))   // Keep only the 10 most recent builds 
   	}
+  	
+  	environment {
+  		SONAR = credentials('sonar')
+  		DOCKERHUB = credentials('dockerhub')
+		DOCKERHUB-REPO = "craigcloudbees"
+		DOCKER_IMG_NAME = "sample-rest-server:0.0.1"
+  	}
 
 	stages {
 	
@@ -29,12 +36,6 @@ pipeline {
 		}
 		
 		stage('Quality Analysis') {
-		
-			// Import our Sonar credentials in the environment block
-			// See https://jenkins.io/doc/pipeline/tour/environment/#credentials-in-the-environment
-			environment {
-				SONAR = credentials('sonar')
-			}
 			when {
 				branch 'master'
 			}
@@ -51,22 +52,27 @@ pipeline {
 		}
 		
 		stage('Create Docker Image') {
-			environment {
-				DOCKERHUB = credentials('dockerhub')
-				DOCKER_IMG_NAME = "sample-rest-server:0.0.1"
-			}
 			//when {
 			//	branch 'master'
 			//}
 			steps {
-				sh 'docker -v'
-				
+				// Build Docker image, log into Docker Hub, and push the image
 				sh """
-					docker build -t craigcloudbees/${DOCKER_IMG_NAME} ./
+					docker build -t ${DOCKERHUB-REPO}/${DOCKER_IMG_NAME} ./
 					docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW
-					docker push craigcloudbees/${DOCKER_IMG_NAME}
+					docker push ${DOCKERHUB-REPO}/${DOCKER_IMG_NAME}
 				"""
-				
+			}
+		}
+		
+		stage('Test Docker Image') {
+			steps {
+				echo 'Run the image'
+			}
+			post {
+				always {
+					echo 'Stop the running image'
+				}
 			}
 		}
 		
