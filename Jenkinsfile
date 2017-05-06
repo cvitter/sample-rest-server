@@ -64,7 +64,7 @@ pipeline {
 				sh """
 					docker build -t craigcloudbees/${DOCKER_IMG_NAME} ./
 					docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW
-					docker push craigcloudbees/${DOCKER_IMG_NAME}-
+					docker push craigcloudbees/${DOCKER_IMG_NAME}
 				"""
 				
 			}
