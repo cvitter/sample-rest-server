@@ -9,7 +9,7 @@ pipeline {
   	environment {
   		SONAR = credentials('sonar')
   		DOCKERHUB = credentials('dockerhub')
-		DOCKERHUB-REPO = "craigcloudbees"
+		DOCKERHUB_REPO = "craigcloudbees"
 		DOCKER_IMG_NAME = "sample-rest-server:0.0.1"
   	}
 
@@ -58,9 +58,9 @@ pipeline {
 			steps {
 				// Build Docker image, log into Docker Hub, and push the image
 				sh """
-					docker build -t ${DOCKERHUB-REPO}/${DOCKER_IMG_NAME} ./
+					docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME} ./
 					docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW
-					docker push ${DOCKERHUB-REPO}/${DOCKER_IMG_NAME}
+					docker push ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}
 				"""
 			}
 		}
