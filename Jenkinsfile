@@ -3,14 +3,14 @@ pipeline {
 	agent any
     
     options {
-    	buildDiscarder(logRotator(numToKeepStr:'10'))   // Keep only the 10 most recent builds 
+    	buildDiscarder(logRotator(numToKeepStr:'10'))   	// Keep only the 10 most recent builds 
   	}
   	
   	environment {
-  		SONAR = credentials('sonar')
-  		DOCKERHUB = credentials('dockerhub')
-		DOCKERHUB_REPO = "craigcloudbees"
-		DOCKER_IMG_NAME = "sample-rest-server:0.0.1"
+  		SONAR = credentials('sonar')						// Sonar Credentials
+  		DOCKERHUB = credentials('dockerhub')				// Docker Hub Credentials
+		DOCKERHUB_REPO = "craigcloudbees"					// Repo on Docker Hub to push our image to
+		DOCKER_IMG_NAME = "sample-rest-server:0.0.1"		// Name of our Docker image
   	}
 
 	stages {
@@ -35,6 +35,20 @@ pipeline {
 			}
 		}
 		
+		stage('Create Docker Image') {
+			//when {
+			//	branch 'master'
+			//}
+			steps {
+				// Build Docker image, log into Docker Hub, and push the image
+				sh """
+					docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME} ./
+					docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW
+					docker push ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}
+				"""
+			}
+		}
+		
 		stage('Quality Analysis') {
 			when {
 				branch 'master'
@@ -51,30 +65,19 @@ pipeline {
 			}
 		}
 		
-		stage('Create Docker Image') {
-			//when {
-			//	branch 'master'
-			//}
+		stage('Test Docker Image') {
 			steps {
-				// Build Docker image, log into Docker Hub, and push the image
 				sh """
-					docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME} ./
-					docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW
-					docker push ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}
+					CID=$(docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME})
+					
+					docker kill ${CID}
+					docker rm -v ${CID}
+					
 				"""
+				//sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
 			}
 		}
 		
-		stage('Test Docker Image') {
-			steps {
-				echo 'Run the image'
-			}
-			post {
-				always {
-					echo 'Stop the running image'
-				}
-			}
-		}
 		
     }
     
