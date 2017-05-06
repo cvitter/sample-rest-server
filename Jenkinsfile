@@ -51,11 +51,17 @@ pipeline {
 		}
 		
 		stage('Create Docker Image') {
+			environment {
+				DOCKER_IMG_NAME = "sample-rest-server:${POM_VERSION}"
+			}
 			when {
 				branch 'master'
 			}
 			steps {
 				sh 'docker -v'
+				
+				sh "docker build -t ${DOCKER_IMG_NAME} ./"
+				
 			}
 		}
 		
