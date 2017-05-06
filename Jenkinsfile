@@ -70,10 +70,11 @@ pipeline {
 				sh """
 					CID=$(docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME})
 					
-					docker kill ${CID}
-					docker rm -v ${CID}
+					docker stop ${CID}
+					
 					
 				"""
+				//docker rm -v ${CID}
 				//sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
 			}
 		}
