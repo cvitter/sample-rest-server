@@ -12,6 +12,9 @@ pipeline {
 			steps {
 				sh 'mvn clean package'
 				junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+				
+				sh 'pwd'
+				sh 'ls -l'
 			}
 		}
 		
