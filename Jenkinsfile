@@ -15,6 +15,7 @@ pipeline {
 				
 				sh 'pwd'
 				sh 'ls -l'
+				sh 'ls -l target'
 			}
 		}
 		
