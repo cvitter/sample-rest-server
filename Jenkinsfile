@@ -18,12 +18,7 @@ pipeline {
 		stage('Build') {
 			steps {
 				sh 'mvn clean package'
-				
 				junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
-				
-				sh 'pwd'
-				sh 'ls -l'
-				sh 'ls -l target'
 			}
 		}
 		
@@ -77,6 +72,9 @@ pipeline {
 		
 		stage('Archive Artifacts') {
 			steps {
+				sh 'pwd'
+				sh 'ls -l'
+				sh 'ls -l target'
 				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
 			}
 		}
