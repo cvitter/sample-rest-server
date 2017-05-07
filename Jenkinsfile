@@ -79,7 +79,7 @@ pipeline {
 				
 				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
 				
-				sh 'zip -r site.zip site'
+				sh 'zip -r target/site.zip target/site'
 				archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
 			}
 		}
