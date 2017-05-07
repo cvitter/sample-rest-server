@@ -76,7 +76,11 @@ pipeline {
 				sh 'ls -l'
 				sh 'ls -l target'
 				sh 'ls -l target/site'
+				
 				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+				
+				sh 'zip -r site.zip site'
+				archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
 			}
 		}
 		
