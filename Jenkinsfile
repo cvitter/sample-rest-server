@@ -36,11 +36,8 @@ pipeline {
 		}
 		
 		stage('Create Docker Image') {
-			//when {
-			//	branch 'master'
-			//}
 			steps {
-				// Build Docker image, log into Docker Hub, and push the image
+				// Build Docker image, log into Docker Hub, and push the image to our repo
 				sh """
 					docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME} ./
 					docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW
@@ -67,8 +64,14 @@ pipeline {
 		
 		stage('Test Docker Image') {
 			steps {
+				// Run the Docker image we created previously
 				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}'
-					
+				
+				// 
+				def result = sh script: 'curl -s http://localhost:4567/hello', returnStdout: true
+				echo 'RESULT: $result'
+
+				// Stop the Docker image
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
 			}
 		}
