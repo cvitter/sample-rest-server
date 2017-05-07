@@ -17,8 +17,7 @@ pipeline {
 	
 		stage('Build') {
 			steps {
-				sh 'mvn clean package site'
-				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+				sh 'mvn clean package'
 				
 				junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
 				
@@ -29,9 +28,9 @@ pipeline {
 		}
 		
 		stage('Create Site') {
-			when {
-				branch 'master'
-			}
+			//when {
+			//	branch 'master'
+			//}
 			steps {
 				sh 'mvn site:site'
 			}
@@ -73,6 +72,12 @@ pipeline {
 				
 				// Stop the Docker image
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
+			}
+		}
+		
+		stage('Archive Artifacts') {
+			steps {
+				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
 			}
 		}
 		
