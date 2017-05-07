@@ -75,6 +75,7 @@ pipeline {
 				sh 'pwd'
 				sh 'ls -l'
 				sh 'ls -l target'
+				sh 'ls -l target/site'
 				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
 			}
 		}
