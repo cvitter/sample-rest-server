@@ -18,6 +18,8 @@ pipeline {
 		stage('Build') {
 			steps {
 				sh 'mvn clean package'
+				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+				
 				junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
 				
 				sh 'pwd'
@@ -68,12 +70,6 @@ pipeline {
 				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}'
 				
 				//
-				script {
-    				def response = httpRequest 'http://localhost:4567/hello'
-    				println("Status: "+response.status)
-        			println("Content: "+response.content)
-				} 
-				
 				
 				// Stop the Docker image
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
