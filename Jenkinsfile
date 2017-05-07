@@ -23,9 +23,9 @@ pipeline {
 		}
 		
 		stage('Create Site') {
-			//when {
-			//	branch 'master'
-			//}
+			when {
+				branch 'master'
+			}
 			steps {
 				sh 'mvn site:site'
 			}
@@ -71,16 +71,28 @@ pipeline {
 		}
 		
 		stage('Archive Artifacts') {
+			when {
+				branch 'master'
+			}
+			steps {
+				// Archive the jar files created
+				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
+				
+				// Zip up the site directory and archive it
+				sh 'zip -r target/site.zip target/site'
+				archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
+			}
+		}
+		
+		stage('Debug Output') {
+			when {
+				branch 'development'
+			}
 			steps {
 				sh 'pwd'
 				sh 'ls -l'
 				sh 'ls -l target'
 				sh 'ls -l target/site'
-				
-				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
-				
-				sh 'zip -r target/site.zip target/site'
-				archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
 			}
 		}
 		
