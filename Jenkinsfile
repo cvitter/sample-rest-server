@@ -67,11 +67,14 @@ pipeline {
 				// Run the Docker image we created previously
 				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}'
 				
-				// 
-				response = httpRequest 'http://localhost:4567/hello'
-				//println("Status: "+response.status)
-        		//println("Content: "+response.content)
-
+				//
+				script {
+    				def response = httpRequest 'http://localhost:4567/hello'
+    				println("Status: "+response.status)
+        			println("Content: "+response.content)
+				} 
+				
+				
 				// Stop the Docker image
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
 			}
