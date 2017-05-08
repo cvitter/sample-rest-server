@@ -60,6 +60,7 @@ pipeline {
 			steps {
 				sh 'docker rmi -f  $(docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}")'
 			failure {
+				echo 'Catching Docker failure outputs'
 			}
 		}
 		
