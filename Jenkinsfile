@@ -8,6 +8,7 @@ pipeline {
   	
   	environment {
   		SONAR = credentials('sonar')						// Sonar Credentials
+  		SONAR_SERVER = "http://sonar.beedemo.net:9000"		// Sonar Server Address
   		DOCKERHUB = credentials('dockerhub')				// Docker Hub Credentials
 		DOCKERHUB_REPO = "craigcloudbees"					// Repo on Docker Hub to push our image to
 		DOCKER_IMG_NAME = "sample-rest-server:0.0.1"		// Name of our Docker image
@@ -52,7 +53,7 @@ pipeline {
 						echo 'Run integration tests here...'
 					},
 					"Sonar Scan" : {
-						sh "mvn sonar:sonar -Dsonar.host.url=http://sonar.beedemo.net:9000 -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
+						sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_SERVER -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
 					}, failFast: true
 				)	
 			}
