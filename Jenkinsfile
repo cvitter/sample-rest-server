@@ -29,7 +29,21 @@ pipeline {
 				sh "docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME} ./"
 			}
 		}
+
 		
+		stage('Test Docker Image') {
+			steps {
+				// Run the Docker image we created previously
+				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}'
+				
+				//
+				
+				// Stop the Docker image
+				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
+			}
+		}
+
+
 		stage('Push Docker Image') { // Pushes the Docker image to Docker Hub
 			when {
 				branch 'master'
@@ -42,15 +56,14 @@ pipeline {
 			}
 		}
 		
-		stage('Test Docker Image') {
+		stage('Delete Local Docker Image') {
 			steps {
-				// Run the Docker image we created previously
-				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}'
-				
-				//
-				
-				// Stop the Docker image
-				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
+				try {
+            		sh 'docker rmi -f  $(docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}")'
+        		}
+        		catch (exc) {
+            		echo ''
+        		}
 			}
 		}
 		
