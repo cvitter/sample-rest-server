@@ -23,25 +23,37 @@ pipeline {
 			}
 		}
 		
-		stage('Create Site') {
+		stage('Create Docker Image') {
+			steps {
+				// Build Docker image, log into Docker Hub, and push the image to our repo
+				sh "docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME} ./"
+			}
+		}
+		
+		stage('Push Docker Image') { // Pushes the Docker image to Docker Hub
 			when {
 				branch 'master'
 			}
 			steps {
-				sh 'mvn site:site'
-			}
-		}
-		
-		stage('Create Docker Image') {
-			steps {
-				// Build Docker image, log into Docker Hub, and push the image to our repo
 				sh """
-					docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME} ./
 					docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW
 					docker push ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}
 				"""
 			}
 		}
+		
+		stage('Test Docker Image') {
+			steps {
+				// Run the Docker image we created previously
+				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}'
+				
+				//
+				
+				// Stop the Docker image
+				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
+			}
+		}
+		
 		
 		stage('Quality Analysis') {
 			when {
@@ -58,16 +70,14 @@ pipeline {
 				)	
 			}
 		}
+	
 		
-		stage('Test Docker Image') {
+		stage('Create Site') {
+			when {
+				branch 'master'
+			}
 			steps {
-				// Run the Docker image we created previously
-				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}'
-				
-				//
-				
-				// Stop the Docker image
-				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
+				sh 'mvn site:site'
 			}
 		}
 		
