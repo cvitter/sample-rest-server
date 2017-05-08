@@ -11,7 +11,8 @@ pipeline {
   		SONAR_SERVER = "http://sonar.beedemo.net:9000"		// Sonar Server Address
   		DOCKERHUB = credentials('dockerhub')				// Docker Hub Credentials
 		DOCKERHUB_REPO = "craigcloudbees"					// Repo on Docker Hub to push our image to
-		DOCKER_IMG_NAME = "sample-rest-server:0.0.1"		// Name of our Docker image
+		APP_VERSION = "0.0.1"								//
+		DOCKER_IMG_NAME = "sample-rest-server"				// Name of our Docker image
   	}
 
 	stages {
@@ -26,10 +27,24 @@ pipeline {
 		stage('Create Docker Image') {
 			steps {
 				// Build Docker image, log into Docker Hub, and push the image to our repo
-				sh "docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME} ./"
+				sh "docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION} ./"
 			}
 		}
+
 		
+		stage('Test Docker Image') {
+			steps {
+				// Run the Docker image we created previously
+				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}'
+				
+				//
+				
+				// Stop the Docker image
+				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
+			}
+		}
+
+
 		stage('Push Docker Image') { // Pushes the Docker image to Docker Hub
 			when {
 				branch 'master'
@@ -37,20 +52,15 @@ pipeline {
 			steps {
 				sh """
 					docker login -u $DOCKERHUB_USR -p $DOCKERHUB_PSW
-					docker push ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}
+					docker push ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}
 				"""
 			}
 		}
 		
-		stage('Test Docker Image') {
+		
+		stage('Delete Local Docker Image') {
 			steps {
-				// Run the Docker image we created previously
-				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}'
-				
-				//
-				
-				// Stop the Docker image
-				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
+				sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
 			}
 		}
 		
