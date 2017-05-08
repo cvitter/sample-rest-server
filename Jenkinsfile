@@ -24,9 +24,19 @@ pipeline {
 			}
 		}
 		
+		stage('Publish Reports') {
+			steps {
+				if (env.BRANCH_NAME == 'master') {
+            		echo 'I only execute on the master branch'
+       			} 
+       			else {
+            		echo 'I execute elsewhere'
+        		}
+			}
+		}
+		
 		stage('Create Docker Image') {
 			steps {
-				// Build Docker image, log into Docker Hub, and push the image to our repo
 				sh "docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION} ./"
 			}
 		}
@@ -45,7 +55,8 @@ pipeline {
 		}
 
 
-		stage('Push Docker Image') { // Pushes the Docker image to Docker Hub
+		// Pushes the Docker image to Docker Hub - Master only
+		stage('Push Docker Image') { 
 			when {
 				branch 'master'
 			}
@@ -58,6 +69,7 @@ pipeline {
 		}
 		
 		
+		// Delete the Docker image created locally on the agent to clean up our environment
 		stage('Delete Local Docker Image') {
 			steps {
 				sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
