@@ -23,17 +23,7 @@ pipeline {
 				junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
 			}
 		}
-		
-		stage('Publish Reports') {
-			//steps {
-				if (env.BRANCH_NAME == 'master') {
-            		echo 'I only execute on the master branch'
-       			} 
-       			else {
-            		echo 'I execute elsewhere'
-        		}
-			//}
-		}
+
 		
 		stage('Create Docker Image') {
 			steps {
