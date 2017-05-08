@@ -59,6 +59,7 @@ pipeline {
 		
 		stage('Delete Local Docker Image') {
 			steps {
+				echo 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f'
 				sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f'
 			}
 		}
