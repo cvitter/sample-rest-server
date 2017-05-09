@@ -61,12 +61,17 @@ pipeline {
 		
 		stage('Test Docker Image') {
 			steps {
-				retry (5) {
+				retry (10) {
 					// Use httpRequest to check default API endpoint, will throw an error if the endpoint
 					// isn't accessible at the address specified, retry utilized here to give the container
 					// time to start
 					script {
-						env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
+						try {
+							env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
+						}
+						catch {
+							echo 'Waiting for Rest API to start...'
+						}
 					}
 				}
 				// TODO: Capture test results and record somewhere
