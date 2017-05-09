@@ -41,7 +41,7 @@ pipeline {
 		stage('Create Docker Image') {
 			steps {
 				// First make sure that a version of this image isn't already running
-				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
+				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
 				
 				// Then delete any images that already exist for this version of the API
 				sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
@@ -150,7 +150,7 @@ pipeline {
     	// Clean up our environment
     	always {
     		// Stop the docker container if started
-    		sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
+    		sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
     		
     		// Delete the docker image created
     		sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
