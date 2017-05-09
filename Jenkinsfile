@@ -23,7 +23,7 @@ pipeline {
 		stage('Parse POM') {
 			steps {
 				script {
-					def env.POM = readMavenPom file: 'pom.xml'
+					env.POM = "${readMavenPom ('pom.xml')}"
 					APP_VERSION = POM.version
 					echo "${POM.version}"
 					echo 'SOMETHING HERE'
