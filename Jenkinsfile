@@ -23,9 +23,9 @@ pipeline {
 		stage('Parse POM') {
 			steps {
 				script {
-					//env.POM = readMavenPom file: 'pom.xml'
-					//APP_VERSION = POM.version
-					//echo "${POM.version}"
+					def env.POM = readMavenPom file: 'pom.xml'
+					APP_VERSION = POM.version
+					echo "${POM.version}"
 					echo 'SOMETHING HERE'
 				}
 			}
@@ -56,6 +56,7 @@ pipeline {
 				script {
 					env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
 				}
+				// TODO: Capture test results and record somewhere
 				
 				// Stop the Docker image
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
