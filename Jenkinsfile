@@ -53,9 +53,9 @@ pipeline {
 				
 				// Use httpRequest to check default API endpoint, will throw an error if the endpoint
 				// isn't accessible at the address specified
-				script {
-					env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
-				}
+				//script {
+				//	env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
+				//}
 				// TODO: Capture test results and record somewhere
 				
 				// Stop the Docker image
