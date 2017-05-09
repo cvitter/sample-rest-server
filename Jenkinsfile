@@ -39,24 +39,38 @@ pipeline {
 		
 		stage('Create Docker Image') {
 			steps {
+				// First make sure the a version of the image isn't already running
+				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
+				
+				// Then delete any images that already exist for this version of the API
+				sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
+				
+				// Now build a new docker image for this version of the API
 				sh "docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION} ./"
 			}
 		}
 
 		
+		stage('Run Docker Image') {
+			steps {
+				// Start the new image we just created
+				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}'
+			}
+		}
+		
 		stage('Test Docker Image') {
 			steps {
-				// Run the Docker image we created previously
-				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}'
-				
 				// Use httpRequest to check default API endpoint, will throw an error if the endpoint
 				// isn't accessible at the address specified
 				script {
 					env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
 				}
 				// TODO: Capture test results and record somewhere
-				
-				// Stop the Docker image
+			}
+		}
+		
+		stage('Run Docker Image') {
+			steps {
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
 			}
 		}
