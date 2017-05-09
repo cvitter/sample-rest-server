@@ -63,15 +63,14 @@ pipeline {
 				// Use httpRequest to check default API endpoint, will throw an error if the endpoint
 				// isn't accessible at the address specified
 				script {
-					env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
+					try {
+						env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
+					}
+					catch (ERROR) {
+						echo "Error: ${ERROR}"
+					}
 				}
 				// TODO: Capture test results and record somewhere
-			}
-		}
-		
-		stage('Stop Docker Image') {
-			steps {
-				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
 			}
 		}
 
@@ -88,15 +87,7 @@ pipeline {
 				"""
 			}
 		}
-		
-		
-		// Delete the Docker image created locally on the agent to clean up our environment
-		stage('Delete Local Docker Image') {
-			steps {
-				sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
-			}
-		}
-		
+
 		
 		stage('Quality Analysis') {
 			when {
@@ -153,6 +144,13 @@ pipeline {
     }
     
     post {
+    	always {
+    		// Stop the docker container if started
+    		sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
+    		
+    		// Delete the docker image created
+    		sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
+    	}
     	
     	success {
     		echo 'SUCCESS!'
