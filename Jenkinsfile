@@ -11,12 +11,15 @@ pipeline {
   		SONAR_SERVER = "http://sonar.beedemo.net:9000"		// Sonar Server Address
   		DOCKERHUB = credentials('dockerhub')				// Docker Hub Credentials
 		DOCKERHUB_REPO = "craigcloudbees"					// Repo on Docker Hub to push our image to
-		APP_VERSION = "0.0.1"								//
+		APP_VERSION = "0.0.1"								// Version of the app, used to tag the Docker image
 		DOCKER_IMG_NAME = "sample-rest-server"				// Name of our Docker image
+		CONTAINER_ADDRESS = "localhost"						// Address at which running container can be reached
+															// for http based testing ex: http://localhost:4567/hello
   	}
 
 	stages {
 	
+		// Extract application information from the pom.xml file
 		stage('Parse POM') {
 			steps {
 				script {
@@ -48,13 +51,11 @@ pipeline {
 				// Run the Docker image we created previously
 				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}'
 				
-				//
+				// Use httpRequest to check default API endpoint, will throw an error if the endpoint
+				// isn't accessible at the address specified
 				script {
-					env.RESULT = httpRequest 'http://localhost:4567/hello'
+					env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
 				}
-				echo "---------------------------------------------"
-				echo "${RESULT}"
-				echo "---------------------------------------------"
 				
 				// Stop the Docker image
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
