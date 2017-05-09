@@ -11,7 +11,7 @@ pipeline {
   		SONAR_SERVER = "http://sonar.beedemo.net:9000"		// Sonar Server Address
   		DOCKERHUB = credentials('dockerhub')				// Docker Hub Credentials
 		DOCKERHUB_REPO = "craigcloudbees"					// Repo on Docker Hub to push our image to
-		APP_VERSION = "0.0.0"								//
+		APP_VERSION = "0.0.1"								//
 		DOCKER_IMG_NAME = "sample-rest-server"				// Name of our Docker image
   	}
 
@@ -20,10 +20,10 @@ pipeline {
 		stage('Parse POM') {
 			steps {
 				script {
-					env.POM = readMavenPom file: 'pom.xml'
-					APP_VERSION = POM.version
-					echo "${POM.version}"
-					//echo 'SOMETHING HERE'
+					//env.POM = readMavenPom file: 'pom.xml'
+					//APP_VERSION = POM.version
+					//echo "${POM.version}"
+					echo 'SOMETHING HERE'
 				}
 			}
 		}
@@ -52,8 +52,9 @@ pipeline {
 				script {
 					env.RESULT = httpRequest 'http://localhost:4567/hello'
 				}
-				
+				echo "---------------------------------------------"
 				echo "${RESULT}"
+				echo "---------------------------------------------"
 				
 				// Stop the Docker image
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
