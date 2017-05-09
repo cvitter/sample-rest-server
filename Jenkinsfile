@@ -69,7 +69,7 @@ pipeline {
 						try {
 							env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
 						}
-						catch {
+						catch (ERROR) {
 							echo 'Waiting for Rest API to start...'
 						}
 					}
