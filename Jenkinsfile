@@ -26,7 +26,7 @@ pipeline {
 					pom = readMavenPom file: 'pom.xml'
 					echo "${pom}"
 					APP_VERSION = pom.version
-					echo "pom.version = ${pom.version}"
+					echo "pom.version = ${APP_VERSION}"
 				}
 			}
 		}
