@@ -11,11 +11,25 @@ pipeline {
   		SONAR_SERVER = "http://sonar.beedemo.net:9000"		// Sonar Server Address
   		DOCKERHUB = credentials('dockerhub')				// Docker Hub Credentials
 		DOCKERHUB_REPO = "craigcloudbees"					// Repo on Docker Hub to push our image to
-		APP_VERSION = "0.0.1"								//
+		APP_VERSION = "0.0.1"								// Version of the app, used to tag the Docker image
 		DOCKER_IMG_NAME = "sample-rest-server"				// Name of our Docker image
+		CONTAINER_ADDRESS = "localhost"						// Address at which running container can be reached
+															// for http based testing ex: http://localhost:4567/hello
   	}
 
 	stages {
+	
+		// Extract application information from the pom.xml file
+		stage('Parse POM') {
+			steps {
+				script {
+					//env.POM = readMavenPom file: 'pom.xml'
+					//APP_VERSION = POM.version
+					//echo "${POM.version}"
+					echo 'SOMETHING HERE'
+				}
+			}
+		}
 	
 		stage('Build') {
 			steps {
@@ -24,9 +38,9 @@ pipeline {
 			}
 		}
 		
+		
 		stage('Create Docker Image') {
 			steps {
-				// Build Docker image, log into Docker Hub, and push the image to our repo
 				sh "docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION} ./"
 			}
 		}
@@ -37,7 +51,11 @@ pipeline {
 				// Run the Docker image we created previously
 				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}'
 				
-				//
+				// Use httpRequest to check default API endpoint, will throw an error if the endpoint
+				// isn't accessible at the address specified
+				script {
+					env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
+				}
 				
 				// Stop the Docker image
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
@@ -45,7 +63,8 @@ pipeline {
 		}
 
 
-		stage('Push Docker Image') { // Pushes the Docker image to Docker Hub
+		// Pushes the Docker image to Docker Hub - Master only
+		stage('Push Docker Image') { 
 			when {
 				branch 'master'
 			}
@@ -58,6 +77,7 @@ pipeline {
 		}
 		
 		
+		// Delete the Docker image created locally on the agent to clean up our environment
 		stage('Delete Local Docker Image') {
 			steps {
 				sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
@@ -120,17 +140,13 @@ pipeline {
     }
     
     post {
-    
-    	always {
-    		echo 'Always'
-    	}
     	
     	success {
-    		echo 'success'
+    		echo 'SUCCESS!'
     	}
     	
     	failure {
-    		echo 'failure'
+    		echo 'FAILURE!'
     	}
     }
 
