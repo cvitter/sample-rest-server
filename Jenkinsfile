@@ -20,9 +20,10 @@ pipeline {
 		stage('Parse POM') {
 			steps {
 				script {
-					env.POM = readMavenPom file: 'pom.xml'
-					APP_VERSION = POM.version
-					echo "${POM.version}"
+					//env.POM = readMavenPom file: 'pom.xml'
+					//APP_VERSION = POM.version
+					//echo "${POM.version}"
+					echo 'SOMETHING HERE'
 				}
 			}
 		}
@@ -49,7 +50,7 @@ pipeline {
 				
 				//
 				script {
-					env.RESULT = 'test'
+					env.RESULT = httpRequest 'localhost:4567/hello'
 				}
 				
 				echo "${RESULT}"
