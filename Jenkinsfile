@@ -17,6 +17,16 @@ pipeline {
 
 	stages {
 	
+		stage('Parse POM') {
+			steps {
+				script {
+					env.POM = readMavenPom file: 'pom.xml'
+					APP_VERSION = POM.version
+					echo "${POM.version}"
+				}
+			}
+		}
+	
 		stage('Build') {
 			steps {
 				sh 'mvn clean package'
