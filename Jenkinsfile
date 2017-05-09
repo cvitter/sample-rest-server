@@ -24,6 +24,7 @@ pipeline {
 			steps {
 				script {
 					env.POM = readMavenPom file: 'pom.xml'
+					echo "${POM}"
 					//APP_VERSION = POM.version
 					//echo "${POM.version}"
 					echo 'SOMETHING HERE'
