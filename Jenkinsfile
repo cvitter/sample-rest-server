@@ -19,7 +19,7 @@ pipeline {
 
 	stages {
 	
-		// Extract application information from the pom.xml file
+		// Extract the application version number from the pom.xml file
 		stage('Parse POM') {
 			steps {
 				script {
@@ -29,6 +29,7 @@ pipeline {
 			}
 		}
 	
+
 		stage('Build') {
 			steps {
 				sh 'mvn clean package'
@@ -39,8 +40,8 @@ pipeline {
 		
 		stage('Create Docker Image') {
 			steps {
-				// First make sure the a version of the image isn't already running
-				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
+				// First make sure that a version of this image isn't already running
+				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
 				
 				// Then delete any images that already exist for this version of the API
 				sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
@@ -62,14 +63,10 @@ pipeline {
 			steps {
 				retry (5) {
 					// Use httpRequest to check default API endpoint, will throw an error if the endpoint
-					// isn't accessible at the address specified
+					// isn't accessible at the address specified, retry utilized here to give the container
+					// time to start
 					script {
-						//try {
-							env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
-						//}
-						//catch (ERROR) {
-						//	echo "Error: ${ERROR}"
-						//}
+						env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
 					}
 				}
 				// TODO: Capture test results and record somewhere
@@ -117,6 +114,7 @@ pipeline {
 			}
 		}
 		
+		
 		stage('Archive Artifacts') {
 			when {
 				branch 'master'
@@ -128,8 +126,11 @@ pipeline {
 				// Zip up the site directory and archive it
 				sh 'zip -r target/site.zip target/site'
 				archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
+				
+				// TODO: Archive API test results
 			}
 		}
+		
 		
 		stage('Debug Output') {
 			when {
@@ -146,20 +147,13 @@ pipeline {
     }
     
     post {
+    	// Clean up our environment
     	always {
     		// Stop the docker container if started
-    		sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
+    		sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}") || true'
     		
     		// Delete the docker image created
     		sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
-    	}
-    	
-    	success {
-    		echo 'SUCCESS!'
-    	}
-    	
-    	failure {
-    		echo 'FAILURE!'
     	}
     }
 
