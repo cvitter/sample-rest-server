@@ -23,7 +23,7 @@ pipeline {
 				junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
 			}
 		}
-
+		
 		
 		stage('Create Docker Image') {
 			steps {
@@ -38,6 +38,11 @@ pipeline {
 				sh 'docker run -d -p 4567:4567 ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}'
 				
 				//
+				script {
+					env.RESULT = 'test'
+				}
+				
+				echo "${RESULT}"
 				
 				// Stop the Docker image
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
@@ -122,17 +127,13 @@ pipeline {
     }
     
     post {
-    
-    	always {
-    		echo 'Always'
-    	}
     	
     	success {
-    		echo 'success'
+    		echo 'SUCCESS!'
     	}
     	
     	failure {
-    		echo 'failure'
+    		echo 'FAILURE!'
     	}
     }
 
