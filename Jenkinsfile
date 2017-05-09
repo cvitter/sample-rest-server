@@ -69,7 +69,7 @@ pipeline {
 			}
 		}
 		
-		stage('Run Docker Image') {
+		stage('Stop Docker Image') {
 			steps {
 				sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
 			}
