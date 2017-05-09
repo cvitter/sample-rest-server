@@ -50,7 +50,7 @@ pipeline {
 				
 				//
 				script {
-					env.RESULT = httpRequest 'localhost:4567/hello'
+					env.RESULT = httpRequest 'http://localhost:4567/hello'
 				}
 				
 				echo "${RESULT}"
