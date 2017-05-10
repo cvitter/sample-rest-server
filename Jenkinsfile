@@ -18,15 +18,6 @@ pipeline {
   	}
 
 	stages {
-	
-		stage('Clean Workspace') {
-			when {
-				branch 'master'
-			}
-			steps {
-				deleteDir()
-			}
-		}
 		
 	
 		// Extract the application version number from the pom.xml file
