@@ -19,6 +19,16 @@ pipeline {
 
 	stages {
 	
+		stage('Clean Workspace') {
+			when {
+				branch 'master'
+			}
+			steps {
+				deleteDir()
+			}
+		}
+		
+	
 		// Extract the application version number from the pom.xml file
 		stage('Parse POM') {
 			steps {
@@ -134,7 +144,8 @@ pipeline {
 				sh 'zip -r target/site.zip target/site'
 				archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
 				
-				// TODO: Archive API test results
+				// Archive API test results
+				archiveArtifacts artifacts: '**/target/*.txt', fingerprint: true
 			}
 		}
 		
