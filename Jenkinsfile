@@ -68,13 +68,15 @@ pipeline {
 					script {
 						try {
 							env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
+							
+							// Write the test results to a file we can archive
+							writeFile file: "target/restApiTests.txt", text: "${RESULT}"
 						}
 						catch (ERROR) {
 							echo 'Waiting for Rest API to start...'
 						}
 					}
 				}
-				// TODO: Capture test results and record somewhere
 			}
 		}
 
