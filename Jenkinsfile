@@ -19,6 +19,16 @@ pipeline {
 
 	stages {
 	
+		stage('Clean Workspace') {
+			when {
+				branch 'master'
+			}
+			steps {
+				deleteDir()
+			}
+		}
+		
+	
 		// Extract the application version number from the pom.xml file
 		stage('Parse POM') {
 			steps {
@@ -68,13 +78,15 @@ pipeline {
 					script {
 						try {
 							env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
+							
+							// Write the test results to a file we can archive
+							writeFile file: "target/restApiTests.txt", text: "${RESULT}"
 						}
 						catch (ERROR) {
 							echo 'Waiting for Rest API to start...'
 						}
 					}
 				}
-				// TODO: Capture test results and record somewhere
 			}
 		}
 
@@ -132,7 +144,8 @@ pipeline {
 				sh 'zip -r target/site.zip target/site'
 				archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
 				
-				// TODO: Archive API test results
+				// Archive API test results
+				archiveArtifacts artifacts: '**/target/*.txt', fingerprint: true
 			}
 		}
 		
