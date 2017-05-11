@@ -74,7 +74,6 @@ pipeline {
 							writeFile file: "target/restApiTests.txt", text: "${RESULT}"
 						}
 						catch (ERROR) {
-							echo 'Waiting for Rest API to start...'
 						}
 					}
 				}
