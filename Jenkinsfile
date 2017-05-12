@@ -67,19 +67,23 @@ pipeline {
 					// isn't accessible at the address specified, retry utilized here to give the container
 					// time to start
 					script {
-						//try {
-							env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
+						env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
 							
-							// Write the test results to a file we can archive
-							writeFile file: "target/restApiTests.txt", text: "${RESULT}"
-						//}
-						//catch (ERROR) {
-						//}
+						// Write the test results to a file we can archive
+						writeFile file: "target/restApiTests.txt", text: "${RESULT}"
 					}
 				}
 			}
 		}
 
+
+    	stage("Checkpoint") {
+      		agent none
+      		steps {
+        		checkpoint 'Completed Docker Image Testing'
+     		}
+    	}
+		
 
 		// Pushes the Docker image to Docker Hub - Master only
 		stage('Push Docker Image') { 
