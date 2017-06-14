@@ -18,7 +18,6 @@ pipeline {
   	}
 
 	stages {
-		
 	
 		// Extract the application version number from the pom.xml file
 		stage('Parse POM') {
@@ -29,15 +28,13 @@ pipeline {
 				}
 			}
 		}
-	
 
 		stage('Build') {
 			steps {
 				sh 'mvn clean package'
 				junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
 			}
-		}
-		
+		}	
 		
 		stage('Create Docker Image') {
 			steps {
@@ -51,7 +48,6 @@ pipeline {
 				sh "docker build -t ${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION} ./"
 			}
 		}
-
 		
 		stage('Run Docker Image') {
 			steps {
@@ -76,14 +72,15 @@ pipeline {
 			}
 		}
 
-
+		// Checkpoints are currently only supported on CloudBees Jenkins Enterprise
+      	// using the following Enterprise plugin:
+      	// https://go.cloudbees.com/docs/cloudbees-documentation/cje-user-guide/index.html#workflow-sect-checkpoint
     	stage("Checkpoint") {
       		agent none
       		steps {
         		checkpoint 'Completed Docker Image Testing'
      		}
     	}
-		
 
 		// Pushes the Docker image to Docker Hub - Master only
 		stage('Push Docker Image') { 
@@ -97,7 +94,6 @@ pipeline {
 				"""
 			}
 		}
-
 		
 		stage('Quality Analysis') {
 			when {
@@ -109,12 +105,12 @@ pipeline {
 						echo 'Run integration tests here...'
 					},
 					"Sonar Scan" : {
-						sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_SERVER -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
+						//sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_SERVER -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
+						echo 'Skipping sonar run...'
 					}, failFast: true
 				)	
 			}
 		}
-	
 		
 		stage('Create Site') {
 			when {
@@ -123,8 +119,7 @@ pipeline {
 			steps {
 				sh 'mvn site:site'
 			}
-		}
-		
+		}		
 		
 		stage('Archive Artifacts') {
 			when {
@@ -141,8 +136,7 @@ pipeline {
 				// Archive API test results
 				archiveArtifacts artifacts: '**/target/*.txt', fingerprint: true
 			}
-		}
-		
+		}		
 		
 		stage('Debug Output') {
 			when {
@@ -153,8 +147,7 @@ pipeline {
 				sh 'ls -l'
 				sh 'ls -l target'
 			}
-		}
-		
+		}		
 		
     }
     
