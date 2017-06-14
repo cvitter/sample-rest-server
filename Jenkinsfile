@@ -105,7 +105,8 @@ pipeline {
 						echo 'Run integration tests here...'
 					},
 					"Sonar Scan" : {
-						sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_SERVER -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
+						//sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_SERVER -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
+						echo 'Skipping sonar run...'
 					}, failFast: true
 				)	
 			}
