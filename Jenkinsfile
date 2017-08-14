@@ -75,12 +75,12 @@ pipeline {
 		// Checkpoints are currently only supported on CloudBees Jenkins Enterprise
       	// using the following Enterprise plugin:
       	// https://go.cloudbees.com/docs/cloudbees-documentation/cje-user-guide/index.html#workflow-sect-checkpoint
-    	stage("Checkpoint") {
-      		agent none
-      		steps {
-        		checkpoint 'Completed Docker Image Testing'
-     		}
-    	}
+ //   	stage("Checkpoint") {
+ //    		agent none
+ //     		steps {
+ //       		checkpoint 'Completed Docker Image Testing'
+ //   		}
+ //   	}
 
 		// Pushes the Docker image to Docker Hub - Master only
 		stage('Push Docker Image') { 
