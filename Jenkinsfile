@@ -56,21 +56,21 @@ pipeline {
 			}
 		}
 		
-		stage('Test Docker Image') {
-			steps {
-				retry (10) {
+//		stage('Test Docker Image') {
+//			steps {
+//				retry (10) {
 					// Use httpRequest to check default API endpoint, will throw an error if the endpoint
 					// isn't accessible at the address specified, retry utilized here to give the container
 					// time to start
-					script {
-						env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
+//					script {
+//						env.RESULT = httpRequest "http://${CONTAINER_ADDRESS}:4567/hello"
 							
 						// Write the test results to a file we can archive
-						writeFile file: "target/restApiTests.txt", text: "${RESULT}"
-					}
-				}
-			}
-		}
+//						writeFile file: "target/restApiTests.txt", text: "${RESULT}"
+//					}
+//				}
+//			}
+//		}
 
 		// Checkpoints are currently only supported on CloudBees Jenkins Enterprise
       	// using the following Enterprise plugin:
@@ -151,15 +151,15 @@ pipeline {
 		
     }
     
-    //post {
+    post {
     	// Clean up our environment
-      //always {
+    	  always {
     		// Stop the docker container if started
-    		// sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
+    		sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
     		
     		// Delete the docker image created
-    		// sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
-    	  //}
-    //}
+    		sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
+    	  }
+    }
 
 }
