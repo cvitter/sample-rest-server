@@ -88,9 +88,6 @@ pipeline {
 		}
 		
 		stage('Quality Analysis') {
-			when {
-				branch 'master'
-			}
 			steps {
 				parallel (
 					"Integration Test" : {
