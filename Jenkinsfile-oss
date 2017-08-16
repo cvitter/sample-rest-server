@@ -96,6 +96,9 @@ pipeline {
 					"Integration Test" : {
 						echo 'Run integration tests here...'
 					},
+					"UX Testing" : {
+						echo 'Run UX tests here...'
+					},
 					"Sonar Scan" : {
 						//sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_SERVER -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
 						echo 'Skipping sonar run...'
@@ -122,7 +125,7 @@ pipeline {
 				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
 				
 				// Zip up the site directory and archive it
-				sh 'zip -r target/site.zip target/site || true'
+				sh 'zip -r target/site.zip target/site'
 				archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
 				
 				// Archive API test results
