@@ -32,7 +32,30 @@ pipeline {
 		stage('Build') {
 			steps {
 				sh 'mvn clean package'
-				junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+			}
+		}
+		
+		
+		stage('Quality Analysis') {
+			when {
+				branch 'development'
+			}
+			steps {
+				parallel (
+					"JUnit Tests" : {
+						junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+					},
+					"Integration Test" : {
+						echo 'Run integration tests here...'
+					},
+					"UX Testing" : {
+						echo 'Run UX tests here...'
+					},
+					"Sonar Scan" : {
+						//sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_SERVER -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
+						echo 'Skipping sonar run...'
+					}, failFast: true
+				)	
 			}
 		}	
 		
@@ -87,25 +110,7 @@ pipeline {
 			}
 		}
 		
-		stage('Quality Analysis') {
-			when {
-				branch 'development'
-			}
-			steps {
-				parallel (
-					"Integration Test" : {
-						echo 'Run integration tests here...'
-					},
-					"UX Testing" : {
-						echo 'Run UX tests here...'
-					},
-					"Sonar Scan" : {
-						//sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_SERVER -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
-						echo 'Skipping sonar run...'
-					}, failFast: true
-				)	
-			}
-		}
+
 		
 		stage('Create Site') {
 			when {
