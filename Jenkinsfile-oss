@@ -131,8 +131,8 @@ pipeline {
 				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
 				
 				// Zip up the site directory and archive it
-				sh 'zip -r target/site.zip target/site'
-				archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
+				//sh 'zip -r target/site.zip target/site'
+				//archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
 				
 				// Archive API test results
 				archiveArtifacts artifacts: '**/target/*.txt', fingerprint: true
