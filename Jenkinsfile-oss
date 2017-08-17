@@ -31,8 +31,32 @@ pipeline {
 
 		stage('Build') {
 			steps {
-				sh 'mvn clean package'
-				junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+				sh 'mvn clean package -DskipTests'
+			}
+		}
+		
+		
+		stage('Quality Analysis') {
+			when {
+				branch 'development'
+			}
+			steps {
+				parallel (
+					"JUnit Tests" : {
+						sh 'mvn test'
+						junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
+					},
+					"Integration Test" : {
+						echo 'Run integration tests here...'
+					},
+					"UX Testing" : {
+						echo 'Run UX tests here...'
+					},
+					"Sonar Scan" : {
+						//sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_SERVER -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
+						echo 'Skipping sonar run...'
+					}, failFast: true
+				)	
 			}
 		}	
 		
@@ -87,22 +111,7 @@ pipeline {
 			}
 		}
 		
-		stage('Quality Analysis') {
-			when {
-				branch 'master'
-			}
-			steps {
-				parallel (
-					"Integration Test" : {
-						echo 'Run integration tests here...'
-					},
-					"Sonar Scan" : {
-						//sh "mvn sonar:sonar -Dsonar.host.url=$SONAR_SERVER -Dsonar.organization=$SONAR_USR -Dsonar.login=$SONAR_PSW"
-						echo 'Skipping sonar run...'
-					}, failFast: true
-				)	
-			}
-		}
+
 		
 		stage('Create Site') {
 			when {
@@ -122,7 +131,7 @@ pipeline {
 				archiveArtifacts artifacts: '**/target/*.jar', fingerprint: true
 				
 				// Zip up the site directory and archive it
-				sh 'zip -r target/site.zip target/site || true'
+				sh 'zip -r target/site.zip target/site'
 				archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
 				
 				// Archive API test results
@@ -144,14 +153,14 @@ pipeline {
     }
     
     post {
-    	// Clean up our environment
-    	  always {
-    		// Stop the docker container if started
-    		sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
+       // Clean up our environment
+    	   always {
+    		  // Stop the docker container if started
+    		  sh 'docker stop $(docker ps -q --filter ancestor="${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}:${APP_VERSION}") || true'
     		
-    		// Delete the docker image created
-    		sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
-    	  }
+    		  // Delete the docker image created
+    		  sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
+    	   }
     }
 
 }
