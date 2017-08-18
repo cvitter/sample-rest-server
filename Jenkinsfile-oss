@@ -3,7 +3,8 @@ pipeline {
 	agent any
     
     options {
-    	    buildDiscarder(logRotator(numToKeepStr:'10'))   	    // Keep only the 10 most recent builds 
+    	    buildDiscarder(logRotator(numToKeepStr:'10'))   	    // Keep only the 10 most recent builds
+    	    skipDefaultCheckout()								//  
   	}
   	
   	environment {
@@ -19,8 +20,16 @@ pipeline {
 
 	stages {
 	
-		//
+		// 
+		stage('Checkout') {
+			checkout scm
+		}
+	
+		// Debugging Environmental Values Associated with Build
 		stage('Output env. Values') {
+			when {
+				branch 'development'
+			}
 			steps {
 				echo 'Output some env. values here:'
 				echo "Branch: ${env.BRANCH_NAME}"
