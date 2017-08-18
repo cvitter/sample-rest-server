@@ -177,13 +177,14 @@ pipeline {
 
 }
 
-
+// Method to output changeset information as "- Commit message [author]"
 @NonCPS
 def getChangeString() {
-	MAX_MSG_LEN = 100
+	MAX_MSG_LEN = 1000
 	def changeString = ""
 
- 	echo "Gathering SCM changes"
+ 	echo "SCM changes:"
+ 	echo "----------------------------------------"
  	def changeLogSets = currentBuild.changeSets
  	for (int i = 0; i < changeLogSets.size(); i++) {
 		def entries = changeLogSets[i].items
