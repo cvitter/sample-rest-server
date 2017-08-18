@@ -180,18 +180,25 @@ pipeline {
 // Method to output SCM change set information as "- Commit message [author]"
 @NonCPS
 def getChangeString() {
+	def changeString = ""
+	 
  	echo "SCM changes:"
  	echo "----------------------------------------"
+ 	
  	def changeLogSets = currentBuild.changeSets
+ 	
+ 	// Iterate over changes and add them to changeString
  	for (int i = 0; i < changeLogSets.size(); i++) {
 		def entries = changeLogSets[i].items
  		for (int j = 0; j < entries.length; j++) {
  			def entry = entries[j]
- 			echo " - ${entry.msg} [${entry.author}]\n"
+ 			changeString += " - ${entry.msg} [${entry.author}]\n"
  		}
  	}
 
+	// Not changes
  	if (!changeString) {
- 		echo " - No new changes"
+ 		changeString = " - No new changes"
  	}
+ 	echo changeString
 }
