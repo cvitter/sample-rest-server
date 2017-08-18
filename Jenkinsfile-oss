@@ -19,6 +19,14 @@ pipeline {
 
 	stages {
 	
+		//
+		stage('Output env. Values') {
+			steps {
+				echo 'Output some env. values here:'
+				echo "${env.CHANGE_AUTHOR}"
+			}
+		}
+	
 		// Extract the application version number from the pom.xml file
 		stage('Parse POM') {
 			steps {
