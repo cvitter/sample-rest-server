@@ -181,10 +181,6 @@ pipeline {
 @NonCPS
 def getChangeString() {
 	def changeString = ""
-	 
- 	echo "SCM changes:"
- 	echo "----------------------------------------"
- 	
  	def changeLogSets = currentBuild.changeSets
  	
  	// Iterate over changes and add them to changeString
@@ -200,5 +196,7 @@ def getChangeString() {
  	if (!changeString) {
  		changeString = " - No new changes"
  	}
+ 	
+ 	changeString = "SCM Changes:\n----------------------------------------\n" + changeString + "----------------------------------------";
  	echo changeString
 }
