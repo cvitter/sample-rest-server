@@ -192,9 +192,8 @@ def getChangeString() {
  		}
  	}
 
-	// Not changes
  	if (!changeString) {
- 		changeString = " - No new changes"
+ 		changeString = " - No new changes\n"
  	}
  	
  	changeString = "SCM Changes:\n----------------------------------------\n" + changeString + "----------------------------------------";
