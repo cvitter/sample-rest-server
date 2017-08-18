@@ -3,7 +3,7 @@ pipeline {
 	agent any
     
     options {
-    	    buildDiscarder(logRotator(numToKeepStr:'10'))   	    // Keep only the 10 most recent builds 
+    	    buildDiscarder(logRotator(numToKeepStr:'10'))   	    // Keep only the 10 most recent builds
   	}
   	
   	environment {
@@ -18,6 +18,18 @@ pipeline {
   	}
 
 	stages {
+	
+		// Debugging Environmental Values Associated with Build
+		stage('Output env. Values') {
+			when {
+				branch 'development'
+			}
+			steps {
+				echo 'Output some env. values here:'
+				echo "Branch: ${env.BRANCH_NAME}"
+				echo getChangeString()
+			}
+		}
 	
 		// Extract the application version number from the pom.xml file
 		stage('Parse POM') {
@@ -163,4 +175,28 @@ pipeline {
     	   }
     }
 
+}
+
+// Method to output SCM change set information as "- Commit message [author]"
+@NonCPS
+def getChangeString() {
+	def changeString = ""
+ 	def changeLogSets = currentBuild.changeSets
+ 	
+ 	// Iterate over changes and add them to changeString
+ 	for (int i = 0; i < changeLogSets.size(); i++) {
+		def entries = changeLogSets[i].items
+ 		for (int j = 0; j < entries.length; j++) {
+ 			def entry = entries[j]
+ 			changeString += " - ${entry.msg} [${entry.author}]\n"
+ 		}
+ 	}
+
+ 	if (!changeString) {
+ 		changeString = " - No new changes\n"
+ 	}
+ 	
+ 	changeString = "SCM Changes:\n------------------------------------------------------------\n" + 
+ 		changeString + "-------------------------------------------------------------";
+ 	echo changeString
 }
