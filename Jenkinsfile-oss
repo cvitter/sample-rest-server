@@ -35,9 +35,9 @@ pipeline {
 			steps {
 				echo 'Output some env. values here:'
 				echo "Branch: ${env.BRANCH_NAME}"
-				echo "Author: ${env.CHANGE_ID}"
+				echo "Change ID: ${env.CHANGE_ID}"
 				echo "Author: ${env.CHANGE_AUTHOR}"
-				echo "Author: ${env.CHANGE_TARGET}"
+				echo "Change Target: ${env.CHANGE_TARGET}"
 				echo ""
 				echo "SCM: ${scm.commitId}"
 			}
