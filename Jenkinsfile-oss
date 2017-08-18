@@ -196,6 +196,7 @@ def getChangeString() {
  		changeString = " - No new changes\n"
  	}
  	
- 	changeString = "SCM Changes:\n----------------------------------------\n" + changeString + "----------------------------------------";
+ 	changeString = "SCM Changes:\n------------------------------------------------------------\n" + 
+ 		changeString + "-------------------------------------------------------------";
  	echo changeString
 }
