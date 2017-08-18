@@ -22,7 +22,9 @@ pipeline {
 	
 		// 
 		stage('Checkout') {
-			checkout scm
+			steps {
+				checkout scm
+			}
 		}
 	
 		// Debugging Environmental Values Associated with Build
