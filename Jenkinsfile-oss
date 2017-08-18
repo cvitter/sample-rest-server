@@ -38,6 +38,8 @@ pipeline {
 				echo "Author: ${env.CHANGE_ID}"
 				echo "Author: ${env.CHANGE_AUTHOR}"
 				echo "Author: ${env.CHANGE_TARGET}"
+				echo ""
+				echo "SCM: ${scm.commitId}"
 			}
 		}
 	
