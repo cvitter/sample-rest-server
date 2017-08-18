@@ -39,7 +39,7 @@ pipeline {
 				echo "Author: ${env.CHANGE_AUTHOR}"
 				echo "Change Target: ${env.CHANGE_TARGET}"
 				echo ""
-				echo "SCM: ${scm.commitId}"
+				echo "SCM: ${currentBuild.changeSets}"
 			}
 		}
 	
