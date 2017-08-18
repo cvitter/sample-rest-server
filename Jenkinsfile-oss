@@ -177,7 +177,7 @@ pipeline {
 
 }
 
-// Method to output changeset information as "- Commit message [author]"
+// Method to output SCM change set information as "- Commit message [author]"
 @NonCPS
 def getChangeString() {
 	MAX_MSG_LEN = 1000
