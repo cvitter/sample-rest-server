@@ -4,7 +4,6 @@ pipeline {
     
     options {
     	    buildDiscarder(logRotator(numToKeepStr:'10'))   	    // Keep only the 10 most recent builds
-    	    skipDefaultCheckout()								//  
   	}
   	
   	environment {
@@ -20,14 +19,6 @@ pipeline {
 
 	stages {
 	
-		// 
-		stage('Checkout') {
-			steps {
-				checkout scm
-				echo getChangeString()
-			}
-		}
-	
 		// Debugging Environmental Values Associated with Build
 		stage('Output env. Values') {
 			when {
@@ -36,9 +27,7 @@ pipeline {
 			steps {
 				echo 'Output some env. values here:'
 				echo "Branch: ${env.BRANCH_NAME}"
-				echo "Change ID: ${env.CHANGE_ID}"
-				echo "Author: ${env.CHANGE_AUTHOR}"
-				echo "Change Target: ${env.CHANGE_TARGET}"
+				echo getChangeString()
 			}
 		}
 	
