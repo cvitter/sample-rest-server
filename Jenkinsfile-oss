@@ -22,14 +22,22 @@ pipeline {
 
 	stages {
 	
-		// Get the latest commits for the build and out in logfile
 		stage('Output Github Changeset') {
 			steps {
 				// Call the getChangeset function from CraigsLib
          		githubChangeset()
 			}
 		}
-
+	
+		// Extract the application version number from the pom.xml file
+		stage('Parse POM') {
+			steps {
+				script {
+					pom = readMavenPom file: 'pom.xml'
+					APP_VERSION = pom.version
+				}
+			}
+		}
 
 		stage('Build') {
 			steps {
