@@ -21,11 +21,20 @@ pipeline {
   	}
 
 	stages {
+		
+		// Extract the application version number from the pom.xml file
+		stage('Parse POM') {
+			steps {
+				script {
+					pom = readMavenPom file: 'pom.xml'
+					APP_VERSION = pom.version
+				}
+			}
+		}
 	
 		// Use CraigsLibs.githubChangeset() to get recent commits
 		stage('Github Changeset') {
 			steps {
-				APP_VERSION = readMavenPom().getVersion()	
 				echo githubChangeset()
 			}
 		}
