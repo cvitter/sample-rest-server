@@ -14,7 +14,7 @@ pipeline {
   		SONAR_SERVER = "http://sonar.beedemo.net:9000"		// Sonar Server Address
   		DOCKERHUB = credentials('dockerhub')				    // Docker Hub Credentials
 		DOCKERHUB_REPO = "craigcloudbees"					// Repo on Docker Hub to push our image to
-		APP_VERSION = readMavenPom().getVersion()				// Version of the app, used to tag the Docker image
+		APP_VERSION = "0.0.0"								// Version of the app, used to tag the Docker image
 		DOCKER_IMG_NAME = "sample-rest-server"				// Name of our Docker image
 		CONTAINER_ADDRESS = "localhost"						// Address at which running container can be reached
 															// for http based testing ex: http://localhost:4567/hello
@@ -25,6 +25,7 @@ pipeline {
 		// Use CraigsLibs.githubChangeset() to get recent commits
 		stage('Github Changeset') {
 			steps {
+				APP_VERSION = readMavenPom().getVersion()	
 				echo githubChangeset()
 			}
 		}
