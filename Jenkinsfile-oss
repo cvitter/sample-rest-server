@@ -143,7 +143,7 @@ pipeline {
 				//archiveArtifacts artifacts: '**/target/*.zip', fingerprint: true
 				
 				// Archive API test results
-				archiveArtifacts artifacts: '**/target/*.txt', fingerprint: true
+				//archiveArtifacts artifacts: '**/target/*.txt', fingerprint: true
 			}
 		}		
 		
