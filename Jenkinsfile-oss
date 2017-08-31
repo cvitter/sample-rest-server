@@ -55,6 +55,7 @@ pipeline {
 						junit allowEmptyResults: true, testResults: '**/target/surefire-reports/TEST-*.xml'
 					},
 					"Integration Test" : {
+						sh 'mvn findbugs:findbugs'
 						echo 'Run integration tests here...'
 					},
 					"UX Testing" : {
