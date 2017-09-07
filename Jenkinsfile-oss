@@ -162,6 +162,7 @@ pipeline {
     }
     
     post {
+    	   agent any
        // Clean up our environment
     	   always {
     		  // Stop the docker container if started
