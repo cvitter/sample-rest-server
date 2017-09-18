@@ -1,19 +1,19 @@
 pipeline {
 
-	agent any
+   agent any
     
-    options {
-    	    buildDiscarder(logRotator(numToKeepStr:'10'))
-  	}
+   options {
+      buildDiscarder(logRotator(numToKeepStr:'10'))
+   }
 
-	stages {
+   stages {
 
-		stage('Build') {
-			steps {
-				sh 'mvn clean package'
-			}
-		}		
+      stage('Build') {
+         steps {
+		    sh 'mvn clean package'
+		 }
+	   }		
 
-    }
+   }
     
 }
