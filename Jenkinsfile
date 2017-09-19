@@ -26,7 +26,7 @@ pipeline {
             branch 'master'
          }
          steps {
-            echo "Run the master tests!"
+            echo "Run the master tests!!"
          }
       }
    }
