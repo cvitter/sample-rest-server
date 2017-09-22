@@ -171,5 +171,4 @@ pipeline {
     		  sh 'docker images | grep "${DOCKERHUB_REPO}/${DOCKER_IMG_NAME}" | xargs docker rmi -f || true'
     	   }
     }
-
 }
