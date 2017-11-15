@@ -10,7 +10,7 @@ pipeline {
   	}
   	
   	environment {
-  		SONAR = credentials('sonar')						    // Sonar Credentials
+  		//SONAR = credentials('sonar')						    // Sonar Credentials
   		SONAR_SERVER = "http://sonar.beedemo.net:9000"		// Sonar Server Address
   		DOCKERHUB = credentials('dockerhub')				    // Docker Hub Credentials
 		DOCKERHUB_REPO = "craigcloudbees"					// Repo on Docker Hub to push our image to
