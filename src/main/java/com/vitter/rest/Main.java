@@ -23,7 +23,7 @@ public class Main {
 		// Basic Hello World get example:
         get("/hello", (req, res) -> "Hello World!");
 
-        // replace analyzing text... with a function that returns the following:
+        // a function that returns the following:
         // number of letters, words, and sentences
         // most repeated word.
         post("/analyzetext", (req, res) -> main.analyzetext(req.body().toString()));
