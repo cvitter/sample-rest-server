@@ -70,7 +70,7 @@ public class TextUtilsTest {
     // example of a failing unit test
     @Test
     public void mostRepeatedWordTest() {
-        String result = tu.mostRepeatedWord("Test string is a test."); //expected return: test
+        String result = tu.mostRepeatedWord("This test string is for test purposes."); //expected return: test
         assertEquals("test", result); // should ignore uppercase and lowercase
         // result of this test: add uppercase and lowercase support
     }

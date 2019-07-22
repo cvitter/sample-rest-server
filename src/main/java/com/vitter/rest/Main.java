@@ -8,7 +8,7 @@ public class Main {
         String response = "Text Analyzer Results: \n";
         TextUtils textutils = new TextUtils();
         response = response + "Number of letters: " + textutils.countLetters(requestBody) + "\n";
-        response = response + "Number of Words: " + textutils.countWords(requestBody) + "\n";
+        response = response + "Number of words: " + textutils.countWords(requestBody) + "\n";
         response = response + "Most repeated word: " + textutils.mostRepeatedWord(requestBody) + "\n";
 
         return response;
